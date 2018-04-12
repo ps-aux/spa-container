@@ -5,8 +5,6 @@ const name = 'spa-server-test-build'
 
 const o = { stdio: 'inherit' }
 
-
-
 let num = 1
 
 describe('spa-server container', () => {

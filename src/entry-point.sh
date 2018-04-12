@@ -1,6 +1,15 @@
 #!/usr/bin/env sh
-gen-config.sh > /www/conf.json
+export PREFIX=SPA
+check-required.sh < /vars.txt
+if [ $? -eq 0 ]; then
+    echo "Config is ok"
+else
+    echo "Some env vars are missing"
+    exit 2
+fi
+
+env | grep ${PREFIX}_
+echo /www/index.html | process-template.sh
+
 echo "Starting spa-server"
-# So the first line is emitted
-echo "---"
 nginx "-g" "daemon off;"

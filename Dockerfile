@@ -1,6 +1,14 @@
 FROM nginx:1.13.12-alpine
-ADD src/gen-config.sh /usr/bin
-ADD src/entry-point.sh /
+
+ADD src/bin/* /usr/bin/
+
+# Testing purposes for now
+ADD vars.txt /
+
 ADD src/default.conf /etc/nginx/conf.d/default.conf
+
+# Debugging and testing purposes
 ADD src/index.html /www/
+
+ADD src/entry-point.sh /entry-point.sh
 ENTRYPOINT /entry-point.sh

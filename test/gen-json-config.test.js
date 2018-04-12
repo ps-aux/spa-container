@@ -1,10 +1,10 @@
-const {execSync} = require('child_process')
+const { execSync } = require('child_process')
 
-const run = env => execSync('src/gen-config.sh', {env}).toString()
+const run = env => execSync('src/gen-json-config.sh', { env }).toString()
 
 const runAndParse = env => JSON.parse(run(env))
 
-describe('gent-config.sh', () => {
+describe('gent-json-config.sh', () => {
 
     it('config env vars with default prefix renders properly', () => {
         const parsedCfg = runAndParse({
