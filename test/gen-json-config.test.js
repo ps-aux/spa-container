@@ -1,6 +1,6 @@
 const { execSync } = require('child_process')
 
-const run = env => execSync('src/gen-json-config.sh', { env }).toString()
+const run = env => execSync('src/bin/gen-json-config.sh', { env }).toString()
 
 const runAndParse = env => JSON.parse(run(env))
 

@@ -12,3 +12,4 @@ ADD src/index.html /www/
 
 ADD src/entry-point.sh /entry-point.sh
 ENTRYPOINT /entry-point.sh
+ENV PREFIX SPA

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
-export PREFIX=SPA
 check-required.sh < /vars.txt
+
 if [ $? -eq 0 ]; then
     echo "Config is ok"
 else
