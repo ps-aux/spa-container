@@ -20,10 +20,8 @@ describe('spa-server container', () => {
 
         proc = exec(`docker run --rm -p 4444:80 ${e} --name ${name}-${id()} ${name}`,
             { env }, err => {
-                if (err && !err.killed) {
-                    console.log('err is', err)
-                    throw err
-                }
+                // TODO throwing err with information
+                // But not upon foricbly stoping container
             })
     }
 
@@ -66,21 +64,17 @@ describe('spa-server container', () => {
 
 
 
+            page = await fetch('http://localhost:4444/conf')
+                .then(r => {
+                    expect(r.status).toBe(200)
+                    return r
+                })
+                .then(r => r.json())
 
-            // expect(page).toEqual(
-            // expect.stringMatching(/<!doctype html>(.|\n)*SPA server/m))
-
-            // page = await fetch('http://localhost:4444/conf')
-            //     .then(r => {
-            //         expect(r.status).toBe(200)
-            //         return r
-            //     })
-            //     .then(r => r.json())
-
-            // expect(page).toMatchObject({
-            //     A: "1",
-            //     B: "2"
-            // })
+            expect(page).toMatchObject({
+                ABC: "123",
+                XYZ: "456"
+            })
 
             done()
         }
