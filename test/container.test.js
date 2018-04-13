@@ -1,5 +1,7 @@
 const { execSync, exec } = require('child_process')
+const id = require('uuid/v1');
 const fetch = require('isomorphic-fetch')
+const { JSDOM } = require('jsdom')
 
 const name = 'spa-server-test-build'
 
@@ -16,7 +18,7 @@ describe('spa-server container', () => {
             .map(([k, v]) => `-e ${k}=${v}`)
             .join(' ')
 
-        proc = exec(`docker run --rm -p 4444:80 ${e} --name ${name}-${++num} ${name}`,
+        proc = exec(`docker run --rm -p 4444:80 ${e} --name ${name}-${id()} ${name}`,
             { env }, err => {
                 if (err && !err.killed) {
                     console.log('err is', err)
@@ -34,30 +36,12 @@ describe('spa-server container', () => {
         execSync(`docker image rm -f ${name}`, o)
     })
 
-    afterEach(() => {
-        if (proc) {
-            proc.kill()
-            proc = null
-        }
-    })
-
-    it('gen-config.sh inside container works', () => {
-        const r = execSync(
-            `docker run --rm --name ${name}-${++num}  -e SPA_A=1 --entrypoint /usr/bin/gen-config.sh  ${name}`)
-            .toString()
-
-        expect(JSON.parse(r)).toMatchObject({
-            A: '1'
-        })
-
-    })
-
     // TODO split to separate code /test (possible with one execution)
     it('index.html and conf is properly served', async done => {
 
         startContainer({
-            SPA_A: "1",
-            SPA_B: "2",
+            SPA_ABC: "123",
+            SPA_XYZ: "456",
 
         })
 
@@ -66,20 +50,37 @@ describe('spa-server container', () => {
             let page = await fetch('http://localhost:4444')
                 .then(r => r.text())
 
-            expect(page).toEqual(
-                expect.stringMatching(/<!doctype html>(.|\n)*SPA server/m))
+            const { window: { document: doc } } = new JSDOM(page)
 
-            page = await fetch('http://localhost:4444/conf')
-                .then(r => {
-                    expect(r.status).toBe(200)
-                    return r
-                })
-                .then(r => r.json())
+            const header = doc.querySelector('body h1').textContent
 
-            expect(page).toMatchObject({
-                A: "1",
-                B: "2"
-            })
+            expect(header).toBe('SPA server')
+
+            expect(
+                doc.querySelector('meta[abc]').getAttribute('abc'))
+                .toBe('123')
+
+            expect(
+                doc.querySelector('meta[xyz]').getAttribute('xyz'))
+                .toBe('456')
+
+
+
+
+            // expect(page).toEqual(
+            // expect.stringMatching(/<!doctype html>(.|\n)*SPA server/m))
+
+            // page = await fetch('http://localhost:4444/conf')
+            //     .then(r => {
+            //         expect(r.status).toBe(200)
+            //         return r
+            //     })
+            //     .then(r => r.json())
+
+            // expect(page).toMatchObject({
+            //     A: "1",
+            //     B: "2"
+            // })
 
             done()
         }

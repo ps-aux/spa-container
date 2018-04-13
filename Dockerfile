@@ -2,9 +2,6 @@ FROM nginx:1.13.12-alpine
 
 ADD src/bin/* /usr/bin/
 
-# Testing purposes for now
-ADD vars.txt /
-
 ADD src/default.conf /etc/nginx/conf.d/default.conf
 
 # Debugging and testing purposes

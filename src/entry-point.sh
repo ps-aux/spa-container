@@ -1,15 +1,16 @@
 #!/usr/bin/env sh
-check-required.sh < /vars.txt
+# check-required.sh < /vars.txt
 
-if [ $? -eq 0 ]; then
-    echo "Config is ok"
-else
-    echo "Some env vars are missing"
-    exit 2
-fi
-
+conf=/conf
+calc-env.sh > ${conf}
 env | grep ${PREFIX}_
-echo /www/index.html | process-template.sh
+
+echo "Conf:"
+cat ${conf}
+
+cp /www/index.html /index.cp
+cat /index.cp | process-template.sh ${conf} > /www/index.html
+rm /index.cp
 
 echo "Starting spa-server"
 nginx "-g" "daemon off;"
