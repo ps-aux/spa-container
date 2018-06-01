@@ -55,11 +55,11 @@ describe('spa-server container', () => {
             expect(header).toBe('SPA server')
 
             expect(
-                doc.querySelector('meta[abc]').getAttribute('abc'))
+                doc.querySelector('meta[name=abc]').getAttribute('content'))
                 .toBe('123')
 
             expect(
-                doc.querySelector('meta[xyz]').getAttribute('xyz'))
+                doc.querySelector('meta[name=xyz]').getAttribute('content'))
                 .toBe('456')
 
 
