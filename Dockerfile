@@ -8,5 +8,7 @@ ADD src/default.conf /etc/nginx/conf.d/default.conf
 ADD src/index.html /www/
 
 ADD src/entry-point.sh /entry-point.sh
-ENTRYPOINT /entry-point.sh
+ENV API_PATH_PREFIX="/api"
+#ENV API_PROXY_TARGET="http://172.17.0.1:8080"
 ENV PREFIX SPA
+ENTRYPOINT /entry-point.sh
