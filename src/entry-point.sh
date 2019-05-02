@@ -15,7 +15,7 @@ cat ${conf}
 cp /www/index.html /index.cp
 
 nginx_conf=/etc/nginx/conf.d/default.conf
-cat ${nginx_conf} | process-template.sh ${nginx_conf} > ${nginx_conf}
+cat /default.conf.template | process-template.sh ${conf} > ${nginx_conf}
 
 cat /index.cp | process-template.sh ${conf} > /www/index.html
 rm /index.cp

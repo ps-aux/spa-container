@@ -11,7 +11,11 @@ server {
        try_files /conf.json =404;
    }
 
-   location ${API_PATH_PREFIX}/ {
+   location /api/ {
+       proxy_pass ${API_PROXY_TARGET};
+   }
+
+   location /auth/ {
        proxy_pass ${API_PROXY_TARGET};
    }
 
