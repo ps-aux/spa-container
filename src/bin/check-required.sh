@@ -18,7 +18,7 @@ require () {
 }
 
 
-while read var 
+while read var
 do
-    require ${var}  
+    require ${var}
 done < ${file}

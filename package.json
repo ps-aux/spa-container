@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest",
+    "test:ci": "jest --testPathPattern='^((?!local).)*$'",
     "build": "docker build . -t xxx",
     "run": "docker rm -f spa-server; docker run --rm -e SPA_ABC=my-value -e SPA_XYZ=other-val --name spa-server -p 80:80 xxx",
     "rnb": "npm-run-all build run",

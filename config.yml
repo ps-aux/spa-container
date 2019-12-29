@@ -1,0 +1,78 @@
+version: 2.1
+
+references:
+
+  build_filter: &build_filter
+    branches:
+      only:
+        - master
+
+orbs:
+  slack: circleci/slack@3.2.0
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:13.2.0-browsers
+        environment:
+          DOCKER_REGISTRY_NAME: eu.gcr.io/kubernetes-208711
+          SLACK_WEBHOOK: https://hooks.slack.com/services/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
+    steps:
+      - setup_remote_docker
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Setup vars
+          command: |
+            echo "export VERSION=$(scripts/version ${CIRCLE_BUILD_NUM})" >> $BASH_ENV
+            echo "export DOCKER_IMAGE_NAME=$(scripts/image-name ${DOCKER_REGISTRY_NAME})" >> $BASH_ENV
+            echo "export BUILD_TIME=\"$(date)\"" >> $BASH_ENV
+            echo "export COMMIT_MSG=\"$(git show -s --format=%s)\"" >> $BASH_ENV
+            echo "export COMMIT_ID=$(git rev-parse HEAD)" >> $BASH_ENV
+      - run:
+          name: Prepare
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Build app
+          command: npm run build
+      - run:
+          name: Define Docker tag
+          command: |
+            echo "export DOCKER_TAG=${DOCKER_IMAGE_NAME}:${VERSION}" >> $BASH_ENV
+      - run:
+          name: Docker login
+          command: echo ${GCLOUD_KEY} | docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_NAME}
+      - run:
+          name: Build Docker image
+          command: |
+            docker build . -t "${DOCKER_TAG}" \
+             --build-arg VERSION="${VERSION}" \
+             --build-arg INFO="$(scripts/print-info)"
+          # TODo why working_dir: /tmp/workspace is not working ?
+      - run:
+          name: Tag with latest
+          command: docker tag ${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest
+      - run:
+          name: Push Docker image
+          command: docker push ${DOCKER_IMAGE_NAME}
+      - slack/status:
+          success_message:
+            ':tada: A $CIRCLE_JOB job has succeeded - author: $CIRCLE_USERNAME <$GITHUB_PATH_COMMIT$CIRCLE_SHA1|$CIRCLE_SHA1>'
+          failure_message:
+            ':red_circle: A $CIRCLE_JOB job has failed - author: $CIRCLE_USERNAME <$GITHUB_PATH_COMMIT$CIRCLE_SHA1|$CIRCLE_SHA1>'
+          only_for_branches: "master"
+
+workflows:
+  version: 2
+  all:
+    jobs:
+      - build:
+          context: gcp
+          filters:
+            <<: *build_filter
