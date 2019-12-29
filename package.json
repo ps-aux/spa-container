@@ -9,16 +9,18 @@
     "build": "docker build . -t xxx",
     "run": "docker rm -f spa-server; docker run --rm -e SPA_ABC=my-value -e SPA_XYZ=other-val --name spa-server -p 80:80 xxx",
     "rnb": "npm-run-all build run",
-    "ssh": "docker exec -it spa-server sh"
+    "ssh": "docker exec -it spa-server sh",
+    "update-deps": "ncu --upgrade"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "jest": "^22.4.3",
-    "jsdom": "^11.7.0",
-    "npm-run-all": "^4.1.2",
-    "ramda": "^0.25.0",
-    "uuid": "^3.2.1"
+    "jest": "^24.9.0",
+    "jsdom": "^15.2.1",
+    "npm-run-all": "^4.1.5",
+    "ramda": "^0.26.1",
+    "uuid": "^3.3.3",
+    "npm-check-updates": "^4.0.1"
   }
 }
