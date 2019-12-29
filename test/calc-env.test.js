@@ -22,6 +22,7 @@ describe('calc-env.sh', () => {
         const o = execFileSync('src/bin/calc-env.sh',
           {
               env: {
+                  PREFIX: 'any',
                   SERVER_PORT: '9999',
               }
           }
