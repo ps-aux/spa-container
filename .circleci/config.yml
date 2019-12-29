@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:13.2.0
+      - image: abspro/spa-container-ci:1
     steps:
       - checkout
       - setup_remote_docker
