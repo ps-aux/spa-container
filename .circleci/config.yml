@@ -19,27 +19,27 @@ jobs:
       - run:
           name: Test
           command: npm run test:ci
-       - run:
-         name: Setup vars (consts)
-         command: |
-           echo "export DOCKER_IMAGE_NAME=${DOCKER_LOGIN}/spa-container" >> $BASH_ENV
-           echo "export VERSION=${CIRCLE_BUILD_NUM}" >> $BASH_ENV
-     - run:
-          name: Define Docker tag
+      - run:
+          name: Setup vars (consts)
           command: |
+            echo "export DOCKER_IMAGE_NAME=${DOCKER_LOGIN}/spa-container" >> $BASH_ENV
+            echo "export VERSION=${CIRCLE_BUILD_NUM}" >> $BASH_ENV
+     - run:
+         name: Define Docker tag
+         command: |
                   echo "export DOCKER_TAG=${DOCKER_IMAGE_NAME}/${VERSION}" >> $BASH_ENV
      - run:
-          name: Docker login
-          command: echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_LOGIN} --password-stdin
+         name: Docker login
+         command: echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_LOGIN} --password-stdin
      - run:
-          name: Build Docker image
-          command: docker build . -t ${DOCKER_TAG} --build-arg VERSION=${VERSION}
+         name: Build Docker image
+         command: docker build . -t ${DOCKER_TAG} --build-arg VERSION=${VERSION}
      - run:
-          name: Tag with latest
-          command: docker tag ${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest
+         name: Tag with latest
+         command: docker tag ${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest
      - run:
-          name: Push Docker image
-          command: docker push ${DOCKER_IMAGE_NAME}
+         name: Push Docker image
+         command: docker push ${DOCKER_IMAGE_NAME}
 workflows:
   version: 2
   all:
