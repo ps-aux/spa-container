@@ -7,7 +7,7 @@ calc-env.sh > ${conf}
 # Log
 env | grep ${PREFIX}_
 
-cat ${conf} | gen-json.sh > /www/conf.json
+cat ${conf} | gen-json.sh > /www/info.json
 
 echo "Conf:"
 cat ${conf}
