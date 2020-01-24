@@ -1,25 +1,11 @@
 #!/usr/bin/env sh
-# check-required.sh < /vars.txt
+set -e
 
-conf=/conf
-calc-env.sh > ${conf}
+/spa-go info-json > /www/info.json
+/spa-go nginx-config default.conf.template > /etc/nginx/conf.d/default.conf
+index_html=$(/spa-go html-index /www/index.html)
 
-# Log
-env | grep ${PREFIX}_
-
-cat ${conf} | gen-json.sh > /www/info.json
-
-echo "Conf:"
-cat ${conf}
-
-cp /www/index.html /index.cp
-
-nginx_conf=/etc/nginx/conf.d/default.conf
-cat /default.conf.template | process-template.sh ${conf} > ${nginx_conf}
-
-cat /index.cp | process-template.sh ${conf} > /www/index.html
-rm /index.cp
-
+echo ${index_html} > /www.index.html
 
 echo "Starting spa-server"
 nginx "-g" "daemon off;"

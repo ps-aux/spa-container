@@ -1,5 +1,5 @@
 server {
-    listen {{.ServerPort}};
+    listen 80;
 
     location / {
         root /www;
@@ -11,9 +11,13 @@ server {
        try_files /conf.json =404;
     }
 
-{{range .Proxies}}
-    location {{.Path}} {
-       proxy_pass {{.Backend}};
+
+    location /foo {
+       proxy_pass http://blabla;
     }
-{{end}}
+
+    location /bar {
+       proxy_pass https://bar:123;
+    }
+
 }
