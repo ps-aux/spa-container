@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: abspro/spa-container-ci:2
+      - image: abspro/spa-container-ci:1
     steps:
       - checkout
       - setup_remote_docker
