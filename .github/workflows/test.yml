@@ -1,0 +1,14 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: test
+      run: npm test
+      env:
+        CI: true
