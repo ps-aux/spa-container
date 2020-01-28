@@ -1,25 +1,24 @@
 #!/usr/bin/env sh
-# check-required.sh < /vars.txt
+set -e
 
-conf=/conf
-calc-env.sh > ${conf}
+# Assertion
+if [[ -z ${HTML_INDEX_PATH} ]];then
+    echo "HTML_INDEX_PATH not specified"
+    exit 1
+fi
 
-# Log
-env | grep ${PREFIX}_
+# Assertion
+if [[ -z ${INFO_JSON_PATH} ]];then
+    echo "INFO_JSON_PATH not specified"
+    exit 1
+fi
 
-cat ${conf} | gen-json.sh > /www/info.json
+/spa-go info-json > ${INFO_JSON_PATH}
+/spa-go nginx-config default.conf.template > /etc/nginx/conf.d/default.conf
 
-echo "Conf:"
-cat ${conf}
+index_html=$(/spa-go html-index ${HTML_INDEX_PATH})
 
-cp /www/index.html /index.cp
+echo ${index_html} > ${HTML_INDEX_PATH}
 
-nginx_conf=/etc/nginx/conf.d/default.conf
-cat /default.conf.template | process-template.sh ${conf} > ${nginx_conf}
-
-cat /index.cp | process-template.sh ${conf} > /www/index.html
-rm /index.cp
-
-
-echo "Starting spa-server"
+echo "Starting spa-server at port ${SPA_SERVER_PORT}"
 nginx "-g" "daemon off;"
