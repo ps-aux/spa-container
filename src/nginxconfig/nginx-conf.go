@@ -2,6 +2,7 @@ package nginxconfig
 
 import (
 	"bytes"
+	"errors"
 	"github.com/ps-aux/spa-container/conf"
 	"net/url"
 	"os"
@@ -40,7 +41,7 @@ func TemplateNginxConfig(templatePath string) (string, error) {
 	portStr, present := os.LookupEnv("SPA_SERVER_PORT")
 
 	if !present {
-		portStr = "80"
+		return "", errors.New("SPA_SERVER_PORT not specified")
 	}
 	port, err := strconv.ParseInt(portStr, 10, 32)
 
