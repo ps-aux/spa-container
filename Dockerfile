@@ -9,7 +9,10 @@ RUN ./build-go.sh
 FROM nginx:1.17.8-alpine
 
 ENV WWW_CONTENT_PATH=/www/
+ENV HTML_INDEX_PATH="${WWW_CONTENT_PATH}/index.html"
+
 ENV INFO_JSON_PATH=/info.json
+
 ENV SPA_SERVER_PORT=80
 
 ADD src/bin/* /usr/bin/
