@@ -11,7 +11,7 @@ jobs:
     - name: prepare npm
       run: npm install
     - name: test
-      run: npm test
+      run: npm test:ci
       env:
         CI: true
     - name: Publish to Registry

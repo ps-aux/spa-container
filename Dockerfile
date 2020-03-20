@@ -6,7 +6,7 @@ COPY src .
 
 RUN ./build-go.sh
 
-FROM nginx:1.17.8-alpine
+FROM nginx:1.17.9
 
 ENV WWW_CONTENT_PATH=/www/
 ENV HTML_INDEX_PATH="${WWW_CONTENT_PATH}/index.html"
