@@ -5,6 +5,7 @@ import (
 	"github.com/ps-aux/spa-container/confjson"
 	"github.com/ps-aux/spa-container/htmlindex"
 	"github.com/ps-aux/spa-container/nginxconfig"
+	"github.com/ps-aux/spa-container/proxy"
 	"os"
 )
 
@@ -27,6 +28,12 @@ func confJsonCmd() {
 	fmt.Print(res)
 }
 
+func proxiesJsonCmd() {
+	res, err := proxy.ProxiesJson()
+	HandlePossibleError(err)
+	fmt.Print(res)
+}
+
 func htmlIndexCmd() {
 	path := os.Args[2]
 	res, err := htmlindex.TemplateHtmlIndex(path)
@@ -42,6 +49,8 @@ func main() {
 		templateNginxConfigCmd()
 	case "conf-json":
 		confJsonCmd()
+	case "proxy-json":
+		proxiesJsonCmd()
 	case "html-index":
 		htmlIndexCmd()
 	default:

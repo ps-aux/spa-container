@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 set -e
 
 # Assertion
@@ -15,6 +15,8 @@ fi
 
 
 /spa-go conf-json > /conf.json
+
+/spa-go proxy-json > /proxy.json
 
 /spa-go nginx-config default.conf.template > /etc/nginx/conf.d/default.conf
 

@@ -4,7 +4,11 @@ import { JSDOM } from 'jsdom'
 
 describe('e2e tests', () => {
 
-    const run = dockerRun()
+    const run = dockerRun({
+        SPA_SERVER_PORT: '90',
+        SPA_PROXY_any1: '/foo/:http://localhost/foo',
+        SPA_PROXY_any2: '/bar/:http://localhost/bar'
+    })
 
     let port
     let url
@@ -48,6 +52,18 @@ describe('e2e tests', () => {
 
         expect(res.data).toEqual({
             FOO: 'foo'
+        })
+    })
+
+    it('proxy json', async () => {
+        const res = await http.get(url + '/_proxy')
+
+        expect(res.status).toBe(200)
+        expect(res.headers['content-type']).toBe('application/json')
+
+        expect(res.data).toEqual({
+            '/bar/': 'http://localhost/bar',
+            '/foo/': 'http://localhost/foo'
         })
     })
 

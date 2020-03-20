@@ -14,11 +14,19 @@ export type DockerTestRun = {
 }
 
 
-const run = (port:number) =>
-    cmd(`docker run -i -d -p ${port}:90 -e SPA_SERVER_PORT=90 --rm --name ${imgName} ${imgName}`)
+const run = (port: number, env?: Env) => {
+    const envStr = Object.entries(env || {})
+        .map(([key, val]) => `-e ${key}='${val}'`)
+        .join(' ')
 
-const buildAndRun = () => {
+    cmd(`docker run -i -d -p ${port}:90 ${envStr} --rm --name ${imgName} ${imgName}`)
+}
+
+type Env = { [key: string]: string }
+
+const buildAndRun = (env?: Env) => {
     const dir = __dirname
+
 
     const port = 9999
 
@@ -27,13 +35,14 @@ const buildAndRun = () => {
 
     // Build test image
     cmd(`docker build ${dir} -t ${imgName}`)
-    run(port)
+    run(port, env)
     return port
 }
 
-export const dockerRun = (): DockerTestRun => {
+export const dockerRun = (env?: Env): DockerTestRun => {
+
     return {
-        start: buildAndRun,
+        start: () =>  buildAndRun(env),
         clear: () => {
             cmd(`docker rm -f ${imgName}`)
         }

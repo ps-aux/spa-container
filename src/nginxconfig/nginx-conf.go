@@ -3,22 +3,15 @@ package nginxconfig
 import (
 	"bytes"
 	"errors"
-	"github.com/ps-aux/spa-container/conf"
-	"net/url"
+	"github.com/ps-aux/spa-container/proxy"
 	"os"
 	"strconv"
-	"strings"
 	"text/template"
 )
 
-type Proxy struct {
-	Path    string
-	Backend url.URL
-}
-
 type ConfParams struct {
 	ServerPort int64
-	Proxies    []Proxy
+	Proxies    []proxy.Proxy
 }
 
 func templateConf(templatePath string, params ConfParams) (string, error) {
@@ -49,21 +42,10 @@ func TemplateNginxConfig(templatePath string) (string, error) {
 		return "", err
 	}
 
-	proxiesEnv := conf.EnvVarsWithPrefix("SPA_PROXY_")
+	proxies, err := proxy.GetProxyConf()
 
-	var proxies []Proxy
-
-	for _, e := range proxiesEnv {
-		pair := strings.SplitN(e, ":", 2)
-
-		location := pair[0]
-		proxyPass := pair[1]
-
-		u, err := url.Parse(proxyPass)
-		if err != nil {
-			return "", err
-		}
-		proxies = append(proxies, Proxy{location, *u})
+	if err != nil {
+		return "", err
 	}
 
 	return templateConf(
