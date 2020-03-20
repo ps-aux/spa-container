@@ -8,8 +8,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+  - uses: actions/cache@v1
+    with:
+      path: ~/.npm
+      key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      restore-keys: |
+        ${{ runner.os }}-node-
     - name: prepare npm
-      run: npm install
+      run: npm ci
     - name: test
       run: npm run test:ci
       env:
