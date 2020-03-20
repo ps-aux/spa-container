@@ -25,4 +25,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: abspro/spa-container
-        tags: latests, v-${{ env.GITHUB_RUN_NUMBER }}
+        tags: latest, v-${{ github.run_number }}
