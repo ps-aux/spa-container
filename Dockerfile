@@ -22,6 +22,7 @@ ADD src/default.conf.template /default.conf.template
 ADD src/index.html ${HTML_INDEX_PATH}
 
 ADD src/entry-point.sh /entry-point.sh
+RUN echo '{"notFilled":"true"}' > ${INFO_JSON_PATH}
 ENV PREFIX SPA
 
 COPY --from=builder /build/* /

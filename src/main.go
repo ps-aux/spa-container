@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/ps-aux/spa-container/confjson"
 	"github.com/ps-aux/spa-container/htmlindex"
-	"github.com/ps-aux/spa-container/infojson"
 	"github.com/ps-aux/spa-container/nginxconfig"
 	"os"
 )
@@ -21,8 +21,8 @@ func templateNginxConfigCmd() {
 	fmt.Print(res)
 }
 
-func infoJsonCmd() {
-	res, err := infojson.InfoJson()
+func confJsonCmd() {
+	res, err := confjson.ConfJson()
 	HandlePossibleError(err)
 	fmt.Print(res)
 }
@@ -40,8 +40,8 @@ func main() {
 	switch command {
 	case "nginx-config":
 		templateNginxConfigCmd()
-	case "info-json":
-		infoJsonCmd()
+	case "conf-json":
+		confJsonCmd()
 	case "html-index":
 		htmlIndexCmd()
 	default:

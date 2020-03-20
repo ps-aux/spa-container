@@ -1,4 +1,4 @@
-package infojson
+package confjson
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"github.com/ps-aux/spa-container/vals"
 )
 
-func InfoJson() (string, error) {
+func ConfJson() (string, error) {
 	m := conf.EnvVarsWithPrefix(vals.ConfPrefix + "_")
 	b, err := json.Marshal(m)
 

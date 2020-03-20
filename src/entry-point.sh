@@ -14,10 +14,7 @@ if [[ -z ${INFO_JSON_PATH} ]];then
 fi
 
 
-# Generate info json if not generated
-if [[ ! -f ${INFO_JSON_PATH} ]];then
-    /spa-go info-json > ${INFO_JSON_PATH}
-fi
+/spa-go conf-json > /conf.json
 
 /spa-go nginx-config default.conf.template > /etc/nginx/conf.d/default.conf
 

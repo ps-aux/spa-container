@@ -36,6 +36,17 @@ describe('e2e tests', () => {
         expect(res.headers['content-type']).toBe('application/json')
 
         expect(res.data).toEqual({
+            a: 'b'
+        })
+    })
+
+    it('conf json', async () => {
+        const res = await http.get(url + '/_conf')
+
+        expect(res.status).toBe(200)
+        expect(res.headers['content-type']).toBe('application/json')
+
+        expect(res.data).toEqual({
             FOO: 'foo'
         })
     })
