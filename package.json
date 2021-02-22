@@ -12,7 +12,7 @@
     "ssh": "docker exec -it spa-server sh",
     "update-deps": "ncu --upgrade"
   },
-  "author": "",
+  "author": "-",
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-env": "^7.12.17",
