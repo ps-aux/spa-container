@@ -2,6 +2,6 @@
 
 export CGO_ENABLED=0 go build
 
-go test
+go test -v ./...
 go build -o build/spa-go
 

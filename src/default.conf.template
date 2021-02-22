@@ -1,8 +1,18 @@
 server {
     listen {{.ServerPort}};
 
+    # Any suffix with letters (js, css, images, fonts...)
+    location ~* \.\w+$ {
+        root /www;
+        # Max age
+        expires {{.CacheExpiration}}h;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
     location / {
         root /www;
+        add_header Cache-Control "public, no-cache";
         try_files $uri $uri/index.html /index.html =404;
     }
 

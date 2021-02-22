@@ -14,6 +14,8 @@ func TestTemplateNginxConfig(t *testing.T) {
 
 	os.Setenv("SPA_PROXY_1", "/foo:http://blabla")
 	os.Setenv("SPA_PROXY_blabla", "/bar:https://bar:123")
+	os.Setenv("SPA_SERVER_PORT", "80")
+	os.Setenv("SPA_CACHE_EXPIRATION", "123")
 
 	r, err := TemplateNginxConfig("../default.conf.template")
 
@@ -27,8 +29,9 @@ func TestTemplateNginxConfig(t *testing.T) {
 	}
 
 	ioutil.WriteFile("uu", []byte(r), 0777)
-
+	// Debug
 	fmt.Print(r)
 	assert.Equal(t, string(dat), r)
+	// Delete file
 
 }

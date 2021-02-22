@@ -3,7 +3,7 @@ module.exports = {
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     testPathIgnorePatterns: ['node_modules', 'lib'],
     moduleDirectories: ['node_modules', '.'],
-    testRunner: 'jest-circus/runner',
+    // testRunner: 'jest-circus/runner',
     testEnvironment: 'node',
     verbose: true
 }

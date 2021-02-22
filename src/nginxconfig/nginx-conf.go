@@ -10,8 +10,9 @@ import (
 )
 
 type ConfParams struct {
-	ServerPort int64
-	Proxies    []proxy.Proxy
+	ServerPort      int64
+	Proxies         []proxy.Proxy
+	CacheExpiration int64
 }
 
 func templateConf(templatePath string, params ConfParams) (string, error) {
@@ -36,10 +37,21 @@ func TemplateNginxConfig(templatePath string) (string, error) {
 	if !present {
 		return "", errors.New("SPA_SERVER_PORT not specified")
 	}
+
 	port, err := strconv.ParseInt(portStr, 10, 32)
 
 	if err != nil {
 		return "", err
+	}
+
+	var cacheExpiration = int64(8760)
+	cacheExpirationStr, present := os.LookupEnv("SPA_CACHE_EXPIRATION")
+	if present {
+		val, err := strconv.ParseInt(cacheExpirationStr, 10, 32)
+		if err != nil {
+			return "", err
+		}
+		cacheExpiration = val
 	}
 
 	proxies, err := proxy.GetProxyConf()
@@ -51,7 +63,8 @@ func TemplateNginxConfig(templatePath string) (string, error) {
 	return templateConf(
 		templatePath,
 		ConfParams{
-			ServerPort: port,
-			Proxies:    proxies,
+			ServerPort:      port,
+			Proxies:         proxies,
+			CacheExpiration: cacheExpiration,
 		})
 }

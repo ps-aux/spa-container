@@ -1,23 +1,62 @@
 server {
     listen 80;
 
+    # Any suffix with letters (js, css, images, fonts...)
+    location ~* \.\w+$ {
+        root /www;
+        # Max age
+        expires 123h;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
     location / {
         root /www;
+        add_header Cache-Control "public, no-cache";
         try_files $uri $uri/index.html /index.html =404;
     }
 
-    location /conf {
-       root /www;
-       try_files /conf.json =404;
+   location /_info {
+        # add_header Content-Type application/json;
+        ## override content-type ##
+        types { } default_type "application/json";
+        alias /info.json;
     }
+
+   location /_conf {
+        # add_header Content-Type application/json;
+        ## override content-type ##
+        types { } default_type "application/json";
+        alias /conf.json;
+    }
+
+   location /_proxy {
+        # add_header Content-Type application/json;
+        ## override content-type ##
+        types { } default_type "application/json";
+        alias /proxy.json;
+    }
+
 
 
     location /foo {
        proxy_pass http://blabla;
+
+       proxy_set_header X-Real-IP			$remote_addr;
+       proxy_set_header X-Forwarded-For	$proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto	$scheme;
+       proxy_set_header X-Forwarded-Host	$host;
+       proxy_set_header X-Forwarded-Port	$server_port;
     }
 
     location /bar {
        proxy_pass https://bar:123;
+
+       proxy_set_header X-Real-IP			$remote_addr;
+       proxy_set_header X-Forwarded-For	$proxy_add_x_forwarded_for;
+       proxy_set_header X-Forwarded-Proto	$scheme;
+       proxy_set_header X-Forwarded-Host	$host;
+       proxy_set_header X-Forwarded-Port	$server_port;
     }
 
 }
